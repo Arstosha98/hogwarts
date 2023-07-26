@@ -44,8 +44,8 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
     @GetMapping
-    public Collection<Faculty> getAll(){
-        return facultyService.getAll();
+    public ResponseEntity<Collection<Faculty>> getAll(){
+        return ResponseEntity.ok(facultyService.getAll());
     }
     @GetMapping("/filtered")
     public ResponseEntity<Collection<Faculty>> findByColor(@RequestParam(required = false) String color){

@@ -44,8 +44,8 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
     @GetMapping
-    public Collection<Student> getAll(){
-        return studentService.getAll();
+    public ResponseEntity<Collection<Student>> getAll(){
+        return ResponseEntity.ok(studentService.getAll());
     }
     @GetMapping("/filtered")
     public ResponseEntity<Collection<Student>> findByAge(@RequestParam(required = false) int age){
