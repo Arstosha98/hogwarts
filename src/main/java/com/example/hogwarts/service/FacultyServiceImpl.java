@@ -1,42 +1,41 @@
 package com.example.hogwarts.service;
 
+import com.example.hogwarts.exceptions.FacultyNotFoundException;
 import com.example.hogwarts.model.Faculty;
+import com.example.hogwarts.repository.FacultyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
-    private final Map<Long, Faculty> storage = new HashMap<>();
-    private long count = 0;
+    private final FacultyRepository facultyRepository;
 
-    public Faculty create(Faculty faculty){
-        faculty.setId(count++);
-        storage.put(faculty.getId(), faculty);
-        return faculty;
+    public FacultyServiceImpl(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
-    public Faculty getById(long id){
-        return storage.get(id);
+
+    public Faculty create(Faculty faculty){return facultyRepository.save(faculty);
     }
-    public Faculty update(long id, Faculty faculty){
-        if (!storage.containsKey(id)){
-            return null;
-        }
-        storage.put(id,faculty);
-        return faculty;
+    public Faculty getById(Long id){
+        return facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
     }
-    public void delete(long id){
-        storage.remove(id);
+    public Faculty update(Long id, Faculty faculty){
+        Faculty existingFaculty = facultyRepository.findById(id)
+                .orElseThrow(FacultyNotFoundException::new);
+        existingFaculty.setColor(faculty.getColor());
+        existingFaculty.setName(faculty.getName());
+        return facultyRepository.save(existingFaculty);
+    }
+    public void delete(Long id){
+        Faculty faculty = facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
+        facultyRepository.delete(faculty);
     }
     public Collection<Faculty> getAll(){
-        return storage.values();
+
+        return facultyRepository.findAll();
     }
     public Collection<Faculty> findByColor(String color){
-        return storage.values().stream()
-                .filter(f -> f.getColor().equalsIgnoreCase(color))
-                .collect(Collectors.toList());
+        return facultyRepository.findByColor(color);
     }
 }
