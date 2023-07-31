@@ -62,4 +62,8 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getByAgeBetween(min,max));
     }
 
+    @GetMapping("/by-faculty")
+    public Collection<Student> getByFacultyId(Long facultyId){
+        return studentService.getByFacultyId(facultyId);
+    }
 }
