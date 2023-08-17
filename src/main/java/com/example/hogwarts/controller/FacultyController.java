@@ -56,7 +56,7 @@ public class FacultyController {
     }
     @GetMapping("/by-color-or-name")
     public Collection<Faculty> filteredByColorOrName(@RequestParam String colorOrName){
-        return facultyService.filteredByColorOrName(colorOrName, colorOrName);
+        return facultyService.filteredByColorOrName(colorOrName);
     }
     @GetMapping("/by-student")
     public Faculty getByStudent(Long studentId){
