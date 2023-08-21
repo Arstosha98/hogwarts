@@ -136,8 +136,8 @@ public class StudentControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[1].id").value(2L));
     }
-    @Test
-    void getByFacultyId() throws Exception{
-
-    }
+//    @Test
+//    void getByFacultyId() throws Exception{
+//
+//    }
 }

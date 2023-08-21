@@ -114,7 +114,7 @@ public class FacultyControllerTest {
         assertThat(response.getBody().size()).isEqualTo(1);
     }
     @Test
-    void byColorOrName(){
+    void filteredByColorOrName(){
         ResponseEntity<Collection> response = template
                 .getForEntity("/faculty/by-color-or-name?colorOrName=physics", Collection.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
