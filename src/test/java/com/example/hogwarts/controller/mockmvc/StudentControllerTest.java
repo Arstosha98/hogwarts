@@ -1,7 +1,9 @@
 package com.example.hogwarts.controller.mockmvc;
 
 import com.example.hogwarts.controller.StudentController;
+import com.example.hogwarts.model.Faculty;
 import com.example.hogwarts.model.Student;
+import com.example.hogwarts.repository.AvatarRepository;
 import com.example.hogwarts.repository.FacultyRepository;
 import com.example.hogwarts.repository.StudentRepository;
 import com.example.hogwarts.service.AvatarService;
@@ -24,15 +26,14 @@ import java.util.*;
 import static org.mockito.Mockito.*;
 
 @WebMvcTest(StudentController.class)
+@SpyBean(StudentServiceImpl.class)
+@MockBean(AvatarService.class)
+@MockBean(AvatarRepository.class)
 public class StudentControllerTest {
-    @SpyBean
-    StudentServiceImpl studentService;
     @MockBean
     StudentRepository studentRepository;
     @MockBean
     FacultyRepository facultyRepository;
-    @MockBean
-    AvatarService avatarService;
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -134,10 +135,27 @@ public class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[1].id").value(2L));
+                .andExpect(jsonPath("$[0].name").value("ivan"))
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("oleg"));
     }
     @Test
     void getByFacultyId() throws Exception{
+        List<Student> students = Arrays.asList(
+                new Student(1L,"ivan", 20),
+                new Student(2L,"oleg",25));
 
+        Faculty faculty= new Faculty(1L, "math","red");
+        faculty.setStudent(students);
+        when(facultyRepository.findById(1L)).thenReturn(Optional.of(faculty));
+
+        mockMvc.perform(get("/student/by-faculty?facultyId=" + faculty.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                        .andExpect(jsonPath("$").isArray())
+                        .andExpect(jsonPath("$[0].id").value(1L))
+                        .andExpect(jsonPath("$[0].name").value("ivan"))
+                        .andExpect(jsonPath("$[1].id").value(2L))
+                        .andExpect(jsonPath("$[1].name").value("oleg"));
     }
 }

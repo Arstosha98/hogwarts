@@ -4,7 +4,6 @@ import com.example.hogwarts.HogwartsApplication;
 import com.example.hogwarts.model.Faculty;
 import com.example.hogwarts.model.Student;
 import com.example.hogwarts.repository.FacultyRepository;
-import com.example.hogwarts.repository.StudentRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,8 +26,6 @@ public class FacultyControllerTest {
     TestRestTemplate template;
     @Autowired
     FacultyRepository facultyRepository;
-    @Autowired
-    StudentRepository studentRepository;
     @BeforeEach
     void init(){
         template.postForEntity("/faculty", PHILOSOPHY, Faculty.class);
@@ -36,7 +33,6 @@ public class FacultyControllerTest {
     }
     @AfterEach
     void clearDB(){
-        studentRepository.deleteAll();
         facultyRepository.deleteAll();
     }
     private ResponseEntity<Faculty> createFaculty(String name, String color){
@@ -47,7 +43,6 @@ public class FacultyControllerTest {
         ResponseEntity<Faculty> response = template.postForEntity("/faculty", request, Faculty.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-
         return response;
     }
     @Test

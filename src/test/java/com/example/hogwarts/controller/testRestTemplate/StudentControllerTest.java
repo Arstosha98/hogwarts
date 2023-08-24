@@ -5,8 +5,10 @@ import com.example.hogwarts.model.Faculty;
 import com.example.hogwarts.model.Student;
 import com.example.hogwarts.repository.FacultyRepository;
 import com.example.hogwarts.repository.StudentRepository;
+import com.example.hogwarts.service.AvatarService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +34,8 @@ public class StudentControllerTest {
     StudentRepository studentRepository;
     @Autowired
     FacultyRepository facultyRepository;
+    @Autowired
+    AvatarService avatarService;
 
     @BeforeEach
     void init(){
@@ -127,20 +131,21 @@ public class StudentControllerTest {
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().size()).isEqualTo(3);
     }
+    @Disabled
     @Test
     void getByFacultyId(){
-//        ResponseEntity<Faculty> faculty = createFaculty("math", "red");
-//        Faculty expectedfaculty = faculty.getBody();
-//        Student student = new Student(1L,"ivan",15);
-//        student.setFaculty(expectedfaculty);
-//
-//        ResponseEntity<Student> studentResp = template.postForEntity("/student", student, Student.class);
-//        assertThat(studentResp.getBody()).isNotNull();
-//        Long facultyId = studentResp.getBody().getFaculty().getId();
-//
-//        ResponseEntity<Student> response = template.getForEntity("/student/by-facultyId?facultyId=" + facultyId, Student.class);
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(response.getBody()).isNotNull();
-//        assertThat(response.getBody()).isEqualTo(expectedfaculty);
+        ResponseEntity<Faculty> faculty = createFaculty("math", "red");
+        Faculty expectedfaculty = faculty.getBody();
+        Student student = new Student(1L,"ivan",15);
+        student.setFaculty(expectedfaculty);
+
+        ResponseEntity<Student> studentResp = template.postForEntity("/student", student, Student.class);
+        assertThat(studentResp.getBody()).isNotNull();
+        Long facultyId = studentResp.getBody().getFaculty().getId();
+
+        ResponseEntity<Student> response = template.getForEntity("/student/by-facultyId?facultyId=" + facultyId, Student.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).isEqualTo(expectedfaculty);
     }
 }

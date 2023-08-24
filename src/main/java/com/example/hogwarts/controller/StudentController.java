@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -82,5 +83,17 @@ public class StudentController {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
+    }
+    @GetMapping("/count")
+    public Long count(){
+        return studentService.count();
+    }
+    @GetMapping("/average-age")
+    public Double averageAge(){
+        return studentService.averageAge();
+    }
+    @GetMapping("/last-five")
+    public List<Student> getLastStudent(){
+        return studentService.getLastStudent(5);
     }
 }

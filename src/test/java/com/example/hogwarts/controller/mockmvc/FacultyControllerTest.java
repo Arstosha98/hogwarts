@@ -25,9 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(FacultyController.class)
+@SpyBean(FacultyServiceImpl.class)
 public class FacultyControllerTest {
-    @SpyBean
-    FacultyServiceImpl facultyService;
     @MockBean
     FacultyRepository facultyRepository;
     @MockBean
@@ -119,6 +118,7 @@ public class FacultyControllerTest {
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[2].id").value(3));
     }
+
     @Test
     void filteredByColorOrName() throws Exception{
         when(facultyRepository.filteredByColorOrName("red")).
@@ -138,6 +138,17 @@ public class FacultyControllerTest {
     }
     @Test
     void findByStudent() throws Exception{
-        
+        Faculty faculty = new Faculty(1L, "math","red");
+        Student student = new Student(1L,"ivan", 20);
+        student.setFaculty(faculty);
+        when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
+
+        mockMvc.perform(get("/faculty/by-student?studentId=" + student.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isMap())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("math"))
+                .andExpect(jsonPath("$.color").value("red"));
     }
 }
