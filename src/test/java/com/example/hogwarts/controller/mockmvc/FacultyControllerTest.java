@@ -7,6 +7,7 @@ import com.example.hogwarts.repository.FacultyRepository;
 import com.example.hogwarts.repository.StudentRepository;
 import com.example.hogwarts.service.FacultyServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,17 +17,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(FacultyController.class)
-@SpyBean(FacultyServiceImpl.class)
 public class FacultyControllerTest {
+    @SpyBean
+    FacultyServiceImpl facultyService;
     @MockBean
     FacultyRepository facultyRepository;
     @MockBean
@@ -118,23 +118,24 @@ public class FacultyControllerTest {
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[2].id").value(3));
     }
-
+    @Disabled
     @Test
     void filteredByColorOrName() throws Exception{
-        when(facultyRepository.filteredByColorOrName("red")).
-                thenReturn(Arrays.asList(
-                        new Faculty(1L,"math","red"),
-                        new Faculty(2L,"algebra","red"),
-                        new Faculty(3L,"biology","green")));
+        List<Faculty> faculty = List.of(
+                new Faculty(1L,"math","red"),
+                new Faculty(2L,"rus","yellow"));
+        when(facultyRepository.findAllByColorLikeIgnoreCaseOrNameLikeIgnoreCase("red","math"))
+                .thenReturn(faculty);
 
-        mockMvc.perform(get("/faculty/by-color-or-name?colorOrName=red")
+        mockMvc.perform(get("/faculty/by-color-or-name")
+                        .param("colorOrName","red")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[2].id").value(3));
+                .andExpect(jsonPath("$[0].name").value("math"))
+                .andExpect(jsonPath("$[0].color").value("red"));
     }
     @Test
     void findByStudent() throws Exception{

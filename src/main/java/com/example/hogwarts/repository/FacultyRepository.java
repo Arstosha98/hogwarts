@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
     List<Faculty> findByColor(String color);
-    List<Faculty> filteredByColorOrName(String colorOrName);
+    List<Faculty> findAllByColorLikeIgnoreCaseOrNameLikeIgnoreCase(String color,String name);
 }
