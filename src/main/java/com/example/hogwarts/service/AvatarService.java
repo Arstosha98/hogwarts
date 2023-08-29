@@ -51,8 +51,8 @@ public class AvatarService {
         avatarRepository.save(avatar);
         return avatar.getId();
     }
-    public List<AvatarDto> getPage(int num){
-        return avatarRepository.findAll(PageRequest.of(num,5))
+    public List<AvatarDto> getPage(Integer offset, Integer limit){
+        return avatarRepository.findAll(PageRequest.of(offset, limit))
                 .getContent()
                 .stream()
                 .map(a-> new AvatarDto(a.getId(), a.getStudent().getId(),a.getStudent().getName()))

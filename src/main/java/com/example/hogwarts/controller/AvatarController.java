@@ -42,7 +42,8 @@ public class AvatarController {
         return ResponseEntity.status(200).headers(headers).body(avatar.getData());
     }
     @GetMapping("/page")
-    public List<AvatarDto> getPage(@RequestParam int num){
-        return  avatarService.getPage(num);
+    public List<AvatarDto> getAll(@RequestParam("offset") Integer offset,
+                                    @RequestParam("limit") Integer limit){
+        return avatarService.getPage(offset, limit);
     }
 }
