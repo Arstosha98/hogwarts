@@ -118,7 +118,7 @@ public class FacultyControllerTest {
     }
     @Test
     void filteredByColorOrName() throws Exception{
-        when(facultyRepository.findAllByColorLikeIgnoreCaseOrNameLikeIgnoreCase("red","math"))
+        when(facultyRepository.findAllByColorLikeIgnoreCaseOrNameLikeIgnoreCase("red","red"))
                 .thenReturn(Arrays.asList(
                         new Faculty(1L,"math","red"),
                         new Faculty(2L,"rus","yellow")));
@@ -128,7 +128,9 @@ public class FacultyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].color").value("red"));
     }
     @Test
     void findByStudent() throws Exception{
