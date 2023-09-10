@@ -4,11 +4,14 @@ public class AvatarDto {
     private Long id;
     private Long studentId;
     private String StudentName;
-    public AvatarDto(){}
+
+    public AvatarDto() {
+    }
+
     public AvatarDto(Long id, Long studentId, String studentName) {
         this.id = id;
         this.studentId = studentId;
-        StudentName = studentName;
+        this.StudentName = studentName;
     }
 
     public Long getId() {

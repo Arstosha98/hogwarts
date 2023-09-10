@@ -5,6 +5,8 @@ import com.example.hogwarts.model.Avatar;
 import com.example.hogwarts.model.Student;
 import com.example.hogwarts.repository.AvatarRepository;
 import com.example.hogwarts.repository.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AvatarService {
+    private static final Logger logger = LoggerFactory.getLogger(AvatarService.class);
     private final AvatarRepository avatarRepository;
     private final StudentRepository studentRepository;
     @Value("${path.to.avatars.folder}")
@@ -30,9 +33,13 @@ public class AvatarService {
     }
 
     public Avatar getById(Long id){
+        logger.info("Was invoked method for getById");
         return avatarRepository.findById(id).orElseThrow();
     }
     public Long save(Long studentId, MultipartFile multipartFile) throws IOException {
+        logger.info("Was invoked method for save");
+        logger.debug("File size = " + multipartFile.getSize());
+
         // Step 1. Save at disk
         Files.createDirectories(avatarPath);
         int dotIndex = multipartFile.getOriginalFilename().lastIndexOf(".");
@@ -44,6 +51,7 @@ public class AvatarService {
         // Step 2. Save Database
         Student studentReference = studentRepository.getReferenceById(studentId);
         Avatar avatar = avatarRepository.findFirstByStudent(studentReference).orElse(new Avatar());
+        avatar.setStudent(studentReference);
         avatar.setMediaType(multipartFile.getContentType());
         avatar.setFileSize(multipartFile.getSize());
         avatar.setData(data);
@@ -52,6 +60,7 @@ public class AvatarService {
         return avatar.getId();
     }
     public List<AvatarDto> getPage(Integer offset, Integer limit){
+        logger.info("Was invoked method for getPage");
         return avatarRepository.findAll(PageRequest.of(offset, limit))
                 .getContent()
                 .stream()

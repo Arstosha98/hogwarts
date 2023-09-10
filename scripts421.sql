@@ -18,10 +18,10 @@ insert into faculty values (4,'ravenclaw','blue');
 
 select * from faculty;
 
-insert into student values (1,'Anton', 25, 2);
-insert into student values (2,'Tatyana', 24, 1);
-insert into student values (3,'Natalya', 30, 3);
-insert into student values (4,'Olga', 45, 4);
+insert into student values (1,25,'Anton', 2);
+insert into student values (2,24,'Tatyana', 1);
+insert into student values (3,30,'Natalya', 3);
+insert into student values (4,45,'Olga', 4);
 
 select * from student;
 

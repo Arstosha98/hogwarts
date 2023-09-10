@@ -3,6 +3,8 @@ package com.example.hogwarts.controller;
 import com.example.hogwarts.dto.AvatarDto;
 import com.example.hogwarts.model.Avatar;
 import com.example.hogwarts.service.AvatarService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/avatar")
 public class AvatarController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AvatarController.class);
     private final AvatarService avatarService;
 
     public AvatarController(AvatarService avatarService) {
@@ -30,7 +34,7 @@ public class AvatarController {
         try (FileInputStream fis = new FileInputStream(avatar.getFilePath())){
             fis.transferTo(response.getOutputStream());
         } catch (IOException e){
-            throw new RuntimeException();
+            logger.error("Failed to download avatar with id = " + id, e);
         }
     }
     @GetMapping("/from-db/{id}")
@@ -42,7 +46,7 @@ public class AvatarController {
         return ResponseEntity.status(200).headers(headers).body(avatar.getData());
     }
     @GetMapping("/page")
-    public List<AvatarDto> getAll(@RequestParam("offset") Integer offset,
+    public List<AvatarDto> getPage(@RequestParam("offset") Integer offset,
                                     @RequestParam("limit") Integer limit){
         return avatarService.getPage(offset, limit);
     }
