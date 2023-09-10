@@ -21,4 +21,6 @@ public interface StudentService {
     Long count();
     Double averageAge();
     List<Student> getLastStudent(int num);
+    List<String> getNameStartedBy(char firstSymbol);
+    double getAverageAge();
 }

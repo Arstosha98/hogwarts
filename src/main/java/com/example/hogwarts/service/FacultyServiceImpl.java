@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -62,5 +63,12 @@ public class FacultyServiceImpl implements FacultyService {
         return studentRepository.findById(studentId)
                 .map(Student::getFaculty)
                 .orElseThrow(StudentNotFoundException::new);
+    }
+    public String getLongestName(){
+        return facultyRepository.findAll()
+                .stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElseThrow(FacultyNotFoundException::new);
     }
 }
