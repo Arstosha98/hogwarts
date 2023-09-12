@@ -83,6 +83,7 @@ public class StudentServiceImpl implements StudentService{
         return studentRepository.findLastStudent(num);
     }
     public List<String> getNameStartedBy(char firstSymbol){
+        logger.info("Was invoked method for getNameStartedBy");
         return studentRepository.findAll()
                 .stream()
                 .map(Student::getName)
@@ -91,10 +92,46 @@ public class StudentServiceImpl implements StudentService{
                 .collect(Collectors.toList());
     }
     public double getAverageAge(){
+        logger.info("Was invoked method for getAverageAge");
         return studentRepository.findAll()
                 .stream()
                 .mapToInt(Student::getAge)
                 .average()
                 .orElseThrow(StudentNotFoundException::new);
+    }
+    public void printAsync(){
+        logger.info("Was invoked method for printAsync");
+        List<Student> all = studentRepository.findAll();
+        System.out.println(all.get(0).getName());
+        System.out.println(all.get(1).getName());
+
+        new Thread(()->{
+            System.out.println(all.get(2).getName());
+            System.out.println(all.get(3).getName());
+        }).start();
+
+        new Thread(()->{
+            System.out.println(all.get(4).getName());
+            System.out.println(all.get(5).getName());
+        }).start();
+    }
+    public void printSync(){
+        logger.info("Was invoked method for printSync");
+        List<Student> all = studentRepository.findAll();
+        printSync(all.get(0).getName());
+        printSync(all.get(1).getName());
+
+        new Thread(()->{
+            printSync(all.get(2).getName());
+            printSync(all.get(3).getName());
+        }).start();
+
+        new Thread(()->{
+            printSync(all.get(4).getName());
+            printSync(all.get(5).getName());
+        }).start();
+    }
+    private synchronized void printSync(String name){
+        System.out.println(name);
     }
 }

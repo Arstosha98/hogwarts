@@ -6,13 +6,9 @@ import java.util.Collection;
 import java.util.List;
 
 public interface StudentService {
-
     Student create(Student student);
-
     Student update(Long id, Student student);
-
     Student getById(Long id);
-
     void delete(Long id);
     Collection<Student> getAll();
     Collection<Student> getByAge(int age);
@@ -23,4 +19,6 @@ public interface StudentService {
     List<Student> getLastStudent(int num);
     List<String> getNameStartedBy(char firstSymbol);
     double getAverageAge();
+    void printAsync();
+    void printSync();
 }

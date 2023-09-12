@@ -3,7 +3,6 @@ package com.example.hogwarts.controller;
 import com.example.hogwarts.model.Student;
 import com.example.hogwarts.service.AvatarService;
 import com.example.hogwarts.service.StudentService;
-import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -103,5 +102,13 @@ public class StudentController {
     @GetMapping("/stream/average-age")
     public double getAverageAge(){
         return studentService.getAverageAge();
+    }
+    @GetMapping("/threads/async")
+    public void printAsync(){
+        studentService.printAsync();
+    }
+    @GetMapping("/threads/sync")
+    public void printSync(){
+        studentService.printSync();
     }
 }

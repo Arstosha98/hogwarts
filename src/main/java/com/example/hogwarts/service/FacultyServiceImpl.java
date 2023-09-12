@@ -65,6 +65,7 @@ public class FacultyServiceImpl implements FacultyService {
                 .orElseThrow(StudentNotFoundException::new);
     }
     public String getLongestName(){
+        logger.info("Was invoked method for getLongestName");
         return facultyRepository.findAll()
                 .stream()
                 .map(Faculty::getName)
